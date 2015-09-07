@@ -104,7 +104,7 @@ config.vm.provision "puppet" do |puppet|
 end
 
 
-config.vm.define "Agent001" do |agent001|
+config.vm.define "agent001" do |agent001|
 	agent001.vm.network :public_network, ip: agentIP
 	agent001.vm.hostname = "agent001"
 end
