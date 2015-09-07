@@ -11,4 +11,4 @@ chmod +x atlassian-jira-6.4.9-x64.bin
 #-----------------------
 service jira stop
 sed -i 's/8080/8082/g' /opt/JIRA/conf/server.xml
-
+service jira start
