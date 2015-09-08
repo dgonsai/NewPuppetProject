@@ -1,0 +1,99 @@
+FROM ubuntu:14.04
+MAINTAINER Kieran Moorfield
+RUN apt-get update
+RUN echo "Installing Wget"
+RUN apt-get install -y wget
+RUN echo "Finshed Installing Wget"
+RUN echo "Java Installation Started"
+RUN cd /opt
+RUN sudo wget -nv http://10.50.20.14:8080/aaron/downloads/jdk-8u45-linux-x64.tar.gz
+RUN sudo tar -zxvf jdk-8u45-linux-x64.tar.gz
+RUN sudo update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_45/bin/java 2
+RUN sudo echo "export JAVA_HOME=/opt/jdk1.8.0_45
+export JRE_HOME=/opt/jdk1.8.0_45/jre
+PATH = $PATH:%JAVA_HOME%/bin:%JRE_HOME%/bin
+export PATH" >> /home/vagrant/.bashrc
+RUN echo "Finished Java Installation"
+RUN java -version
+RUN echo "Maven Installation Started"
+RUN wget -nv http://10.50.20.14:8080/aaron/downloads/apache-maven-3.3.3-bin.tar.gz
+RUN sudo tar -zxvf apache-maven-3.3.3-bin.tar.gz
+RUN sudo update-alternatives --install /usr/bin/mvn mvn /opt/apache-maven-3.3.3/bin/mvn 3
+RUN sudo echo "export MAVEN_HOME=/usr/lib/apache/maven/apache-maven-3.3.3
+export PATH=$PATH:%MAVEN_HOME%/bin:
+export PATH" >> /home/vagrant/.bashrc
+RUN echo "Maven Installation Finished"
+RUN mvn -v
+RUN echo "Starting Git Installation"
+RUN sudo apt-get install -y libcurl4-gnutls-dev /
+libexpat1-dev /
+gettext /
+libz-dev /
+libssl-dev /
+RUN wget -nv http://10.50.20.14:8080/aaron/downloads/git-2.1.1.tar.gz
+RUN sudo tar -zxvf git-2.1.1.tar.gz
+RUN cd git-2.1.1
+RUN sudo make prefix=/usr/local/all
+RUN sudo make prefix=/usr/global/all
+RUN sudo make prefix=/usr/local install
+RUN echo "Finished Git Installation"
+RUN git --version
+RUN echo "Starting Jenkins Installation"
+RUN wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
+RUN sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+RUN sudo apt-get update 
+RUN sudo apt-get install -y jenkins
+RUN sudo su jenkins –s /bin/bash
+RUN ssh-keygen
+RUN sudo service jenkins start
+RUN echo "Finished Installing Jenkins"
+RUN echo "Please check if the Jenkins service is running"
+RUN echo "Please open the browser in Windows OS and type in http://localhost:8080"
+RUN echo "Starting Puppet Installation"
+RUN sudo apt-get install -y Puppet Puppetmaster
+RUN echo "Puppet Installation Finished"
+RUN echo "Starting JIRA Installation"
+RUN wget -nv http://10.50.20.14:8080/aaron/downloads/atlassian-jira-6.4.9-x64.bin
+RUN chmod a+x atlassian-jira-6.4.9-x64.bin
+RUN printf "o\n2\n\n\n2\n8084\n8007\n\ny\n" | sudo ./atlassian-jira-6.4.9-x64.bin
+RUN echo "Finished Installing JIRA"
+RUN echo "Please check if the JIRA service is running"
+RUN echo "Please open the browser in Windows OS and type in "http://localhost:8081""
+RUN echo "Starting Zabbix Installation"
+RUN cd /etc/apt
+RUN echo "deb http://ppa.launchpad.net/tbfr/zabbix/ubuntu precise main" >> /sources.list
+RUN echo "deb-src http://ppa.launchpad.net/tbfr/zabbix/ubuntu precise main" >> /sources.list
+RUN cd /etc
+RUN sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C407E17D5F76A32B
+RUN sudo apt-get update
+RUN apt-get install -y zabbix-server-mysql /
+php5-mysql /
+zabbix-frontend-php /
+RUN cd /etc/php5/apache2
+RUN echo "post_max_size = 16M\nmax_execution_time = 300\nmax_input_time = 300\ndate.timezone = "UTC"" >> php.ini
+RUN cp /usr/share/doc/zabbix-frontend-php/examples/zabbix.conf.php.example /etc/zabbix/zabbix.conf.php
+RUN cp /usr/share/doc/zabbix-frontend-php/examples/apache.conf /etc/apache2/conf-available/zabbix.conf
+RUN a2enconf zabbix.conf
+RUN a2enmod alias
+RUN service apache2 reload
+RUN service zabbix-server start 
+RUN echo "go to http://localhost/zabbix to test if installation is successful"
+RUN sudo wget -nv http://download.sonatype.com/nexus/oss/nexus-2.11.4-01-bundle.tar.gz
+RUN sudo mkdir /opt/nexus
+RUN sudo tar xvzf nexus-2.11.4-01-bundle.tar.gz
+RUN sudo mv nexus-2.11.4-01 nexus
+RUN sudo mv sonatype-work nexus
+RUN cd nexus
+RUN sudo ln -s nexus-2.11.4-01 nexus
+RUN cd nexus
+RUN sudo adduser -disabled-password -disabled-login nexus
+RUN cd..
+RUN sudo chown -R nexus:nexus /opt/nexus/nexus-2.11.4-01/
+RUN sudo chown -R nexus:nexus /opt/nexus/sonatype-work/
+RUN sudo chmod -R ugo+wr /opt/nexus
+RUN echo "#!/bin/env bash
+		cd /opt/nexus/nexus
+		echo "The nexus service should now be running at http://localhost:8081/nexus"
+		./bin/nexus console" >> /etc/profile.d/nexus
+RUN sudo chmod 555 /etc/profile.d/nexus	
+RUN ./bin/nexus console	start
