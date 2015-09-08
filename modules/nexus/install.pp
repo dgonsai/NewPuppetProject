@@ -44,7 +44,8 @@ class nexus::install{
 		command => "sudo chown -R nexus:nexus /usr/local/sonatype-work/",
 	}
 	
-	exec { 'run nexus server':
+	# --works without spamming the console! --#
+	exec {'run nexus server':
 		cwd => '/opt/nexus/nexus/bin',
 		command => './nexus console start',
 		require => Exec["change owner-work"]
