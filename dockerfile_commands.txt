@@ -96,4 +96,4 @@ RUN echo "#!/bin/env bash
 		echo "The nexus service should now be running at http://localhost:8081/nexus"
 		./bin/nexus console" >> /etc/profile.d/nexus
 RUN sudo chmod 555 /etc/profile.d/nexus	
-RUN ./bin/nexus console	
+RUN ./bin/nexus console	start
