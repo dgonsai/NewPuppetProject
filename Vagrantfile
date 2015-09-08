@@ -5,6 +5,12 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
+
+
+masterIP = '10.50.15.123'
+agentIP  = '10.50.115.124'
+
+
 Vagrant.configure(2) do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
@@ -21,8 +27,12 @@ Vagrant.configure(2) do |config|
    config.vm.box = "ubuntu/trusty64"
    config.vm.provision :shell, path: "bootstrap.sh"
    config.vm.provision :shell, path: "jenkins_provisions.sh"
-
-
+   config.vm.network :public_network , :auto_network => true , :public_network => "wlan0"
+   config.vm.synced_folder "puppet", "/opt/puppet"
+   o.vm.provider "virtualbox" do |vb|
+	vb.memory = 2056
+	vb.cpus = 2
+   
 
 
 
@@ -82,6 +92,19 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get install -y apache2
   # SHELL
 
-    
+end
 
+
+config.vm.provision "puppet" do |puppet|
+   #puppet.puppet_server  = "master.netbuilder.private"
+   #puppet.puppet_node    = "agent001.netbuilder.private"
+    puppet.manifests_path = "puppet/manifests"
+    puppet.module_path    = "puppet/modules"
+    puppet.manifest_file  = "default.pp"
+end
+
+
+config.vm.define "Agent001" do |agent001|
+	agent001.vm.network :public_network, ip: agentIP
+	agent001.vm.hostname = "agent001"
 end

@@ -77,4 +77,4 @@ sleep 10s
 ## Need to update all the plugin shortnames from the Jenkins update center first
 ## hat tip to https://gist.github.com/1026918#comment-61254
 ####################################################################################
-curl  -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- http://localhost:8080/updateCenter/byId/default/postBack
+#curl -L http://updates.jenkins-ci.org/update-center.json | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- http://localhost:8080/updateCenter/byId/default/postBack
