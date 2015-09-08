@@ -1,9 +1,9 @@
 node 'Master.netbuilder.private' {
-	include iansmith-java
+	include java
 }
 
 node 'Agent001.netbuilder.private' {
-	include iansmith-java
+	include java
 	#include maven
 	#include git
 }
