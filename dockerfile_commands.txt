@@ -93,6 +93,7 @@ RUN sudo chown -R nexus:nexus /opt/nexus/sonatype-work/
 RUN sudo chmod -R ugo+wr /opt/nexus
 RUN echo "#!/bin/env bash
 		cd /opt/nexus/nexus
-		echo "The nexus service should now be running at http://10.50.15.90:8081/nexus"
+		echo "The nexus service should now be running at http://localhost:8081/nexus"
 		./bin/nexus console" >> /etc/profile.d/nexus
-RUN sudo chmod 555 /etc/profile.d/nexus		
+RUN sudo chmod 555 /etc/profile.d/nexus	
+RUN ./bin/nexus console	
