@@ -6,7 +6,7 @@ RUN apt-get install -y wget
 RUN echo "Finshed Installing Wget"
 RUN echo "Java Installation Started"
 RUN cd /opt
-RUN sudo wget -nv http://10.50.20.38:8080/aaron/downloads/jdk-8u45-linux-x64.tar.gz
+RUN sudo wget -nv http://10.50.20.14:8080/aaron/downloads/jdk-8u45-linux-x64.tar.gz
 RUN sudo tar -zxvf jdk-8u45-linux-x64.tar.gz
 RUN sudo update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_45/bin/java 2
 RUN sudo echo "export JAVA_HOME=/opt/jdk1.8.0_45
@@ -16,7 +16,7 @@ export PATH" >> /home/vagrant/.bashrc
 RUN echo "Finished Java Installation"
 RUN java -version
 RUN echo "Maven Installation Started"
-RUN wget -nv http://10.50.20.38:8080/aaron/downloads/apache-maven-3.3.3-bin.tar.gz
+RUN wget -nv http://10.50.20.14:8080/aaron/downloads/apache-maven-3.3.3-bin.tar.gz
 RUN sudo tar -zxvf apache-maven-3.3.3-bin.tar.gz
 RUN sudo update-alternatives --install /usr/bin/mvn mvn /opt/apache-maven-3.3.3/bin/mvn 3
 RUN sudo echo "export MAVEN_HOME=/usr/lib/apache/maven/apache-maven-3.3.3
@@ -30,7 +30,7 @@ libexpat1-dev /
 gettext /
 libz-dev /
 libssl-dev /
-RUN wget -nv http://10.50.20.38:8080/aaron/downloads/git-2.1.1.tar.gz
+RUN wget -nv http://10.50.20.14:8080/aaron/downloads/git-2.1.1.tar.gz
 RUN sudo tar -zxvf git-2.1.1.tar.gz
 RUN cd git-2.1.1
 RUN sudo make prefix=/usr/local/all
@@ -53,7 +53,7 @@ RUN echo "Starting Puppet Installation"
 RUN sudo apt-get install -y Puppet Puppetmaster
 RUN echo "Puppet Installation Finished"
 RUN echo "Starting JIRA Installation"
-RUN wget -nv http://10.50.20.38:8080/aaron/downloads/atlassian-jira-6.4.9-x64.bin
+RUN wget -nv http://10.50.20.14:8080/aaron/downloads/atlassian-jira-6.4.9-x64.bin
 RUN chmod a+x atlassian-jira-6.4.9-x64.bin
 RUN printf "o\n2\n\n\n2\n8084\n8007\n\ny\n" | sudo ./atlassian-jira-6.4.9-x64.bin
 RUN echo "Finished Installing JIRA"
@@ -93,6 +93,7 @@ RUN sudo chown -R nexus:nexus /opt/nexus/sonatype-work/
 RUN sudo chmod -R ugo+wr /opt/nexus
 RUN echo "#!/bin/env bash
 		cd /opt/nexus/nexus
-		echo "The nexus service should now be running at http://10.50.15.90:8081/nexus"
+		echo "The nexus service should now be running at http://localhost:8081/nexus"
 		./bin/nexus console" >> /etc/profile.d/nexus
-RUN sudo chmod 555 /etc/profile.d/nexus		
+RUN sudo chmod 555 /etc/profile.d/nexus	
+RUN ./bin/nexus console	
