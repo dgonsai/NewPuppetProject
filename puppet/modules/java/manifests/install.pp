@@ -1,10 +1,11 @@
-class install {
-	$java_dl_loc  =   "http://10.50.15.14:8080/aaron/downloads/jdk-8u45-linux-x64.tar.gz"
+class install (
+	$java_dl_loc  =   "http://10.50.15.14:8080/aaron/downloads/jdk-8u45-linux-x64.tar.gz",
 	$java_archive =   "jdk-8u45-linux-x64.tar.gz",
 	$java_home    =   "/usr/lib/jvm/jdk1.8.0_48/",
 	$java_folder  =   "jdk1.8.0_48"
+)
+{
 
-	{
 	  Exec {
 		path      =>  [ "/usr/bin", "/bin", "/usr/sbin" ]
  	  }->
@@ -15,12 +16,12 @@ class install {
 
 	  exec { 'download archive':
 		cwd	      =>  '/tmp',
-		command	  =>  "wget ${java_dl_loc}",
+		command	  =>  "wget ${java_dl_loc}"
 	  }->
  
 	  file { "/tmp/$(java_archive)" :
 		ensure    =>  "present",
-		source    =>  "puppet:///modules/java/$(java_archive)"
+		source    =>  "puppet:///modules/java/$(java_archive)",
 		owner     =>  vagrant,
 		mode      =>  775
 	  }->
