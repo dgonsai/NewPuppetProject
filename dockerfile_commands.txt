@@ -1,8 +1,7 @@
 FROM ubuntu:14.04
 MAINTAINER Kieran Moorfield
-RUN apt-get update
+RUN apt-get update && apt-get install -y wget
 RUN echo "Installing Wget"
-RUN apt-get install -y wget
 RUN echo "Finshed Installing Wget"
 RUN echo "Java Installation Started"
 RUN cd /opt
@@ -41,10 +40,8 @@ RUN git --version
 RUN echo "Starting Jenkins Installation"
 RUN wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
 RUN sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
-RUN sudo apt-get update 
-RUN sudo apt-get install -y jenkins
-RUN sudo su jenkins –s /bin/bash
-RUN ssh-keygen
+RUN sudo apt-get update && apt-get install -y jenkins
+RUN sudo su jenkins –s /bin/bash && ssh-keygen
 RUN sudo service jenkins start
 RUN echo "Finished Installing Jenkins"
 RUN echo "Please check if the Jenkins service is running"
@@ -65,8 +62,7 @@ RUN echo "deb http://ppa.launchpad.net/tbfr/zabbix/ubuntu precise main" >> /sour
 RUN echo "deb-src http://ppa.launchpad.net/tbfr/zabbix/ubuntu precise main" >> /sources.list
 RUN cd /etc
 RUN sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C407E17D5F76A32B
-RUN sudo apt-get update
-RUN apt-get install -y zabbix-server-mysql /
+RUN sudo apt-get update && apt-get install -y zabbix-server-mysql /
 php5-mysql /
 zabbix-frontend-php /
 RUN cd /etc/php5/apache2
