@@ -12,12 +12,13 @@ class install (
 	
 	package { "wget":
 		ensure     	=>	'installed',
-	}->
+	}
 
 	exec { 'download archive':
 		cwd	   		=>	'/tmp',
 		command    	=>	"wget ${mvn_dl_loc}",
-	}->
+		require		=>	Package["wget"]
+	}
 
 #	file { "/tmp/${mvn_archive}" :
 #		ensure	   	=>	"present",
@@ -26,28 +27,30 @@ class install (
 	exec { 'extract mvn' :
 		cwd	   		=>	"/tmp",
 		command	   	=>	"tar -zxf ${mvn_archive}",
-	}->
-
+		require		=>	Exec['download archive']
+	}
+	
 	file { '${mvn_home}' :
 		ensure	   	=>	directory,
 		owner	   	=>	vagrant,
-	}->
+		require		=>	Exec['extract mvn']
+	}
 
 	exec { 'move mvn' :
 		cwd			=>	'/tmp',
-		creates		=>	$mvn_home,
 		command		=>	"mv ${mvn_folder} ${mvn_dest}",
-	}->
+		require		=>	File['${mvn_home}']
+	}
 
 	exec { 'install mvn' :
 		logoutput	=>	true,
 		command		=>	"update-alternatives --install /bin/mvn mvn ${mvn_home}/bin/mvn 1"
-	}->
+	}
 	
 	
 	exec { 'set mvn':
 	  	logoutput 	=>	true,
 		command   	=>	"update-alternatives --set mvn ${mvn_home}",
-	}->
+	}
 
 }
