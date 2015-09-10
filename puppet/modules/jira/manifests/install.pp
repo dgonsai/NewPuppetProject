@@ -7,7 +7,7 @@ class jira::install{
 	#downloading the Jira bin file
 	exec{'Download Jira':
 	    cwd => '/opt',
-		command => 'sudo wget http://10.50.20.33:8080/aaron/downloads/atlassian-jira-6.4.9-x64.bin',
+		command => 'sudo wget http://10.50.15.26:8080/aaron/downloads/atlassian-jira-6.4.9-x64.bin',
 		timeout => 0, #ensure the download has enough time to fully download
 	}
 	
@@ -21,7 +21,7 @@ class jira::install{
 	#install the downloaded bin file
 	exec{'install jira':
 	    cwd => '/opt',
-		command => 'sudo ./atlassian-jira-6.4.9-x64.bin -q',
+		command => 'printf "" | sudo ./atlassian-jira-6.4.9-x64.bin',
 		require => Exec['change mod'],
 		timeout => 0, #ensure the install has enough time to fully install
 	}
