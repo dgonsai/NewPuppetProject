@@ -18,8 +18,13 @@ class jira::install {
 
   exec { 'install jira':
     command => "${jira::INSTALL_DIR}${jira::EXEC_FILE} -q",
-	creates => '/opt/atlassian/jira',
+	creates => '/opt/atlassian/JIRA',
     require => File['download jira'],
+  }
+  
+  service { 'jira':
+    ensure  => 'running',
+	require => Exec['install jira'],
   }
 
 }
