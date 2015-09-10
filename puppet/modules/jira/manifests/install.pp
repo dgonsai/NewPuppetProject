@@ -21,7 +21,7 @@ class jira::install{
 	#install the downloaded bin file
 	exec{'install jira':
 	    cwd => '/opt',
-		command => 'printf "" | sudo ./atlassian-jira-6.4.9-x64.bin',
+		command => 'printf "o\n2\n\n\n2\n8079\n8005\n\ny\n" | sudo ./atlassian-jira-6.4.9-x64.bin',
 		require => Exec['change mod'],
 		timeout => 0, #ensure the install has enough time to fully install
 	}
