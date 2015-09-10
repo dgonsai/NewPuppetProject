@@ -3,6 +3,11 @@
   Exec {
     path => ["/bin", "/usr/bin", "/usr/sbin", "/usr/local/sbin","/sbin"]
   }
+  
+  exec { 'update key':
+    command => 'wget -q -O - http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key | apt-key add - ',
+	before  => Exec['apt-get clean'],
+  }
 
   file { 'update sources':
     path => '/etc/apt/sources.list.d/jenkins.list',
