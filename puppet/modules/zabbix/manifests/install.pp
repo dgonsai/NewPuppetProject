@@ -20,8 +20,8 @@ class zabbix::install {
   }
   
   service { 'apache2':
-    ensure  => 'running',
-	require => Package['zabbix-frontend-php'],
+    ensure    => 'running',
+	require   => Package['zabbix-frontend-php'],
 	subscribe => File_Line['configure lang'],
   }
 }
