@@ -30,6 +30,14 @@
 	before => Service['jenkins'],
   }
   
+  file_line { 'change port':
+    path    => '/etc/default/jenkins',
+    line    => 'HTTP_PORT=8081',
+    match   => '^HTTP_PORT', #replace line that matches
+	require => Package['jenkins'],
+	notify  => Service['jenkins'],
+  }
+  
   service { 'jenkins':
     ensure => 'running',
   }
