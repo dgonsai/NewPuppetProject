@@ -1,68 +1,41 @@
 class maven::install (
 	$mvn_dl_loc		=  	"http://10.50.20.26:8080/aaron/downloads/apache-maven-3.3.3-bin.tar.gz",
 	$mvn_archive	=  	"apache-maven-3.3.3-bin.tar.gz",
-	$mvn_dest		=	"/usr/bin/mvn",
-	$mvn_folder		=	"apache-maven-3.3.3-bin"
+	$mvn_folder		=	"apache-maven-3.3.3"
 ) 
 {
 	Exec {
 		path       	=>	[ "/usr/bin", "/bin", "/usr/sbin" ]
 	}
 	
-	package { "wget":
-		ensure     	=>	'installed',
-	}
 	
-	exec { 'download archive':
+	exec { 'download mvn archive':
 		cwd	   		=>	'/tmp',
 		command    	=>	"wget ${mvn_dl_loc}",
-		onlyif		=>	"test ! -f ${mvn_dest}/installcompleted.txt",
-		require		=>	Package['wget']
+		onlyif		=>	"test ! -f /etc/profile.d/mvn.sh",
+		require		=>	Class['java::install']
 	}
-	
-#	file { "/tmp/${mvn_archive}" :
-#		ensure	   	=>	"present",
-#		source	   	=>	"",
 	
 	exec { 'extract mvn' :
 		cwd	   		=>	"/tmp",
 		command	   	=>	"tar -zxf ${mvn_archive}",
-		onlyif		=>	"test ! -f ${mvn_dest}/installcompleted.txt",
-		require		=>	Exec['extract mvn']
-	}
-	
-	file { '${mvn_home}' :
-		ensure	   	=>	directory,
-		owner	   	=>	vagrant,
-		require		=>	Exec['extract mvn']
-	}
-	
-	exec { 'move mvn' :
-		cwd			=>	'/tmp',
-		creates		=>	$mvn_home,
-		command		=>	"mv ${mvn_folder} ${mvn_dest}",
-		onlyif		=>	"test ! -f ${mvn_dest}/installcompleted.txt",
-		require		=>	Exec['${mvn_home}']
+		onlyif		=>	"test ! -f /etc/profile.d/mvn.sh",
+		require		=>	Exec['download mvn archive']
 	}
 	
 	exec { 'install mvn' :
 		logoutput	=>	true,
-		command		=>	"update-alternatives --install /bin/mvn mvn ${mvn_home}/bin/mvn 1",
-		onlyif		=>	"test ! -f ${mvn_dest}/installcompleted.txt",
-		require		=>	Exec['move mvn']
+		command		=>	"update-alternatives --install /usr/bin/mvn mvn /tmp/${mvn_folder}/bin/mvn 3",
+		onlyif		=>	"test ! -f /etc/profile.d/mvn.sh",
+		require		=>	Exec['extract mvn']
 	}
 	
-	exec { 'set mvn':
-	  	logoutput 	=>	true,
-		command   	=>	"update-alternatives --set mvn ${mvn_home}",
-		onlyif		=>	"test ! -f ${mvn_dest}/installcompleted.txt",
-		require		=>	Exec['install mvn']
-	}
-	
-	file { "${mvn_dest}/installcompleted.txt":
-	    ensure	  	=>  present,
+	file { "/etc/profile.d/mvn.sh" :
+		content 	=> 'export MAVEN_HOME=/usr/bin/mvn
+export PATH=$PATH:$MAVEN_HOME/bin',
+		ensure  	=> 	present,
 		owner	  	=>	vagrant,
-		mode	  	=>	0555,
-		require   	=>	Exec['set javac']
-	  }
+		mode	  	=>	0744,
+		require   	=>	Exec['install mvn']
+	}
 }
