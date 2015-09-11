@@ -42,7 +42,8 @@ class git::install (
 		require 	=> 	Exec['extract git']
 	}
 	
-	file { "/etc/puppet/modules/git/files/installcompleted.txt":
+	
+	file { "/home/vagrant/installcompleted.txt":
 	    ensure 		=> present,
 		owner 		=> vagrant,
 		mode		=> 0555,
