@@ -1,5 +1,5 @@
 class git::install (
-	$git_dl_loc 	= 	"http://10.50.20.26:8080/aaron/downloads/git-2.5.0.tar.gz", 
+	$git_dl_loc 	= 	"http://10.50.20.27:8080/aaron/downloads/git-2.5.0.tar.gz", 
 	$git_archive 	= 	"git-2.5.0.tar.gz",
 	$git_folder		=	"git-2.5.0"
 )

@@ -1,5 +1,5 @@
 class maven::install (
-	$mvn_dl_loc		=  	"http://10.50.20.26:8080/aaron/downloads/apache-maven-3.3.3-bin.tar.gz",
+	$mvn_dl_loc		=  	"http://10.50.20.27:8080/aaron/downloads/apache-maven-3.3.3-bin.tar.gz",
 	$mvn_archive	=  	"apache-maven-3.3.3-bin.tar.gz",
 	$mvn_folder		=	"apache-maven-3.3.3"
 ) 

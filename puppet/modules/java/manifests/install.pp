@@ -1,5 +1,5 @@
 class java::install (
-	$java_dl_loc  	=   "http://10.50.20.26:8080/aaron/downloads/jdk-8u45-linux-x64.tar.gz",
+	$java_dl_loc  	=   "http://10.50.20.27:8080/aaron/downloads/jdk-8u45-linux-x64.tar.gz",
 	$java_archive 	=   "jdk-8u45-linux-x64.tar.gz",
 	$java_home    	=   "/opt/jdk1.8.0_45/",
 	$java_folder  	=   "jdk1.8.0_45"
@@ -75,8 +75,8 @@ class java::install (
 	  file { "/etc/profile.d/java.sh":
 	    ensure	  	=>  present,
 		content   	=>  'export JAVA_HOME=/opt/jdk1.8.0_45
-						 export JRE_HOME=/opt/jdk1.8.0_45/jre
-					     export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin',
+export JRE_HOME=/opt/jdk1.8.0_45/jre
+export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin',
 		owner	  	=>	vagrant,
 		mode	  	=>	0744,
 		require   	=>	Exec['set javac']
